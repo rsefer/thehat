@@ -152,6 +152,7 @@
 			justify-content: space-between;
 			align-items: center;
 			gap: 0.5rem;
+			counter-reset: entries;
 		}
 
 		.entry {
@@ -164,7 +165,17 @@
 			text-align: center;
 		}
 
-		.entry:empty:before {
+		.entry:before {
+			counter-increment: entries;
+			content: counter(entries) ".";
+			position: absolute;
+			top: 50%;
+			left: -1.25em;
+			transform: translate(0px, -50%);
+			font-size: 0.75em;
+		}
+
+		.entry:empty:after {
 			content: 'Item';
 			position: absolute;
 			top: 0.25em;
