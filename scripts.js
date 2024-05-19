@@ -1,6 +1,7 @@
 let randomizingInterval;
 let isRandomizing = false;
 let toggleButton = $('#toggleRandomizing');
+let entriesWrap = $('.entries');
 let messageWrap = $('.message');
 const enterKeys = ['Enter', 'NumpadEnter'];
 
@@ -16,8 +17,6 @@ const enterKeys = ['Enter', 'NumpadEnter'];
 		insertNewEntry();
 	}
 
-	$('.entries .entry').first().trigger('focus');
-
 	$('body').on('click', '#toggleRandomizing', function() {
 		if (isRandomizing) {
 			stop();
@@ -31,7 +30,8 @@ const enterKeys = ['Enter', 'NumpadEnter'];
 	});
 
 	$('body').on('click', '#clearEntries', function() {
-		$('.entries').empty();
+		entriesWrap.empty();
+		messageWrap.empty();
 		saveEntries([]);
 		insertNewEntry();
 	});
@@ -89,7 +89,7 @@ function start() {
 }
 
 function stop() {
-	toggleButton.text('Start');
+	toggleButton.text('Shuffle');
 	clearInterval(randomizingInterval);
 	isRandomizing = false;
 	$('body').removeClass('is-randomizing');
@@ -127,7 +127,7 @@ function randomizeEntriesSeries() {
 }
 
 function randomizeEntries() {
-	$('.entries').randomize('.entry');
+	entriesWrap.randomize('.entry');
 }
 
 function saveEntries(entries) {
@@ -135,5 +135,7 @@ function saveEntries(entries) {
 }
 
 function insertNewEntry(content) {
-	$('.entries').append('<div class="entry" contenteditable>' + (content && content.length > 0 ? content : '') + '</div>');
+	entriesWrap.append('<div class="entry" contenteditable>' + (content && content.length > 0 ? content : '') + '</div>');
+	$('.entries .entry').last().trigger('focus');
+
 }
