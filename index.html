@@ -124,10 +124,11 @@
 			justify-content: space-between;
 			align-items: center;
 			gap: 0.5rem;
-			padding: 2rem 1rem;
+			padding: 2rem;
 			margin: 0px auto;
 			max-width: 600px;
 			width: 100%;
+			box-sizing: border-box;
 		}
 
 		main > * {
@@ -153,6 +154,10 @@
 			align-items: center;
 			gap: 0.5rem;
 			counter-reset: entries;
+		}
+
+		.entries-list-copy {
+			display: none;
 		}
 
 		.entry {
@@ -184,6 +189,10 @@
 			opacity: 0.5;
 		}
 
+		.entry:focus {
+			outline: 0px;
+		}
+
 		.message {
 			color: red;
 			font-weight: bold;
@@ -198,6 +207,20 @@
 		button {
 			display: block;
 			width: 100%;
+			-webkit-appearance: none;
+			appearance: none;
+			padding: 0.25em;
+			border-radius: 0.25rem;
+			border: 1px solid currentColor;
+		}
+
+		button:hover {
+			opacity: 0.8;
+			cursor: pointer;
+		}
+
+		button:active {
+			transform: translate(1px, 1px);
 		}
 
 		#toggleRandomizing {
@@ -206,12 +229,14 @@
 		}
 
 		#addEntry,
-		#clearEntries {
-			flex-basis: calc((100% - 0.5rem) / 2);
+		#clearEntries,
+		#copyOrder {
+			flex-basis: calc((100% - 1rem) / 3);
 		}
 
 		.is-randomizing #addEntry,
-		.is-randomizing #clearEntries {
+		.is-randomizing #clearEntries,
+		.is-randomizing #copyOrder {
 			display: none;
 		}
 
@@ -224,8 +249,9 @@
 	<h1>The Hat</h1>
 	<div class="entries"></div>
 	<div class="message"></div>
-	<button type="button" id="addEntry">Add Item</button>
-	<button type="button" id="clearEntries">Clear</button>
+	<button type="button" id="addEntry">+ Add</button>
+	<button type="button" id="clearEntries">&times; Clear</button>
+	<button type="button" id="copyOrder">Copy</button>
 	<button type="button" id="toggleRandomizing">Start</button>
 </main>
 
@@ -267,6 +293,21 @@ const enterKeys = ['Enter', 'NumpadEnter'];
 		$('.entries').empty();
 		saveEntries([]);
 		insertNewEntry();
+	});
+
+	$('body').on('click', '#copyOrder', function() {
+		let entriesCopyList = '';
+		let i = 1;
+		$('.entry').each(function() {
+			entriesCopyList += i + '. ' + $(this).text() + "\n";
+			i++;
+		});
+
+		jQuery('body').append('<textarea class="entries-list-copy">' + entriesCopyList + '</textarea>').promise().done(function() {
+			navigator.clipboard.writeText(jQuery('.entries-list-copy').text()).then(function() {
+				jQuery('.entries-list-copy').remove();
+			});
+		});
 	});
 
 	jQuery('body').on('keypress', '.entries .entry[contenteditable]', function(e) {
