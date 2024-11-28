@@ -7,6 +7,8 @@ const enterKeys = ['Enter', 'NumpadEnter'];
 
 (function($) {
 
+	setSizingVariables();
+
 	let existingEntriesRaw = localStorage.getItem('entries');
 	if (existingEntriesRaw?.length > 0) {
 		let existingEntries = existingEntriesRaw.split(',');
@@ -74,6 +76,14 @@ const enterKeys = ['Enter', 'NumpadEnter'];
 }
 
 })(jQuery);
+
+window.addEventListener('resize', function() {
+	setSizingVariables();
+});
+
+function setSizingVariables() {
+	document.documentElement.style.setProperty('--vh', (Math.ceil((window.innerHeight * 0.01) * 100) / 100) + 'px');
+}
 
 function start() {
 	toggleButton.text('Stop');
